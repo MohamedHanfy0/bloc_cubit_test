@@ -10,4 +10,10 @@ class CharactersRepository {
     final characters = await charactersWebServices.fetchCharacters();
     return characters.map((characters) => Character.fromJson(characters)).toList();
   }
+
+   Future<List<Quote>> getAllQuotes() async {
+    final quote = await charactersWebServices.getAllQuotes();
+    return quote.map((quote) => Quote.fromJson(quote)).toList();
+  }
+
 }

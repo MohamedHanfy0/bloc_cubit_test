@@ -1,10 +1,25 @@
+import 'package:bloc_cubit_test/business_logic/cubit/characters_cubit.dart';
 import 'package:bloc_cubit_test/core/app_style/app_colors.dart';
 import 'package:bloc_cubit_test/data/models/characters.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CharactersDetailsScreen extends StatelessWidget {
+class CharactersDetailsScreen extends StatefulWidget {
   final Character character;
   const CharactersDetailsScreen({super.key, required this.character});
+
+  @override
+  State<CharactersDetailsScreen> createState() =>
+      _CharactersDetailsScreenState();
+}
+
+class _CharactersDetailsScreenState extends State<CharactersDetailsScreen> {
+  late List<Quote> allQuote;
+  @override
+  void initState() {
+    super.initState();
+    allQuote = BlocProvider.of<QuoteCubit>(context).getAllQuote();
+  }
 
   Widget buildSliverAppBar() {
     return SliverAppBar(
@@ -21,16 +36,16 @@ class CharactersDetailsScreen extends StatelessWidget {
         flexibleSpace: FlexibleSpaceBar(
           centerTitle: true,
           title: Text(
-            character.name,
+            widget.character.name,
             style: TextStyle(
               color: AppColors.kWhaiteColor,
             ),
             textAlign: TextAlign.center,
           ),
           background: Hero(
-            tag: character.id,
+            tag: widget.character.id,
             child: Image.network(
-              character.images,
+              widget.character.images,
               fit: BoxFit.cover,
             ),
           ),
@@ -73,6 +88,25 @@ class CharactersDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget checkIfQuoteLoaded(CharactersState State) {
+    if (State is QuoteLoaded) {
+      return displayRandomQuoteOrEmptySpace(State);
+    } else {
+      return showProgressIndicator();
+    }
+  }
+
+  Widget displayRandomQuoteOrEmptySpace(State) {
+    var listQuote = (State).charQuote;
+    return Center(
+      child: Text(listQuote[0]),
+    );
+  }
+
+  Widget showProgressIndicator() {
+    return showProgressIndicator();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,16 +124,28 @@ class CharactersDetailsScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        buildInfoCharacters('Name : ', 'empty'),
+                        buildInfoCharacters('Name : ', widget.character.name),
                         buikDivider(350),
                         buildInfoCharacters(
-                            'Nice Name : ', character.nameKanje),
+                            'Nice Name : ', widget.character.nameKanje),
                         buikDivider(300),
-                        buildInfoCharacters(
-                            'Favorites : ', character.favorites.toString()),
+                        buildInfoCharacters('Favorites : ',
+                            widget.character.favorites.toString()),
                         buikDivider(320),
-                        buildInfoCharacters('About : ', character.about),
+                        buildInfoCharacters('About : ', widget.character.about),
                         buikDivider(350),
+
+                        SizedBox(
+                          height: 20,
+                        ),
+                        BlocBuilder<QuoteCubit, CharactersState>(
+                            builder: (context, State) {
+                          return checkIfQuoteLoaded(State);
+                        }),
+                        // Text(allQuote[0].quote,style: TextStyle(color: AppColors.kYellowColor),),
+                        SizedBox(
+                          height: 20,
+                        )
                       ],
                     ),
                   )

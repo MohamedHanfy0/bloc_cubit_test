@@ -15,3 +15,10 @@ class CharactersLoaded extends CharactersState {
   const  CharactersLoaded({required this.characters});
 
 }
+
+class QuoteLoaded extends CharactersState {
+  final List<Quote> quote;
+
+  const  QuoteLoaded({required this.quote});
+
+}

@@ -16,16 +16,22 @@ class CharactersWebServices {
   }
 
   Future<List<dynamic>> fetchCharacters() async {
-    late List<dynamic> results;
     try {
-      // final response = await dio.get('list');
       // final response = await dio.get('anime' , queryParameters: {'type': 'ova'});
       final response = await dio.get('characters');
       List<dynamic> exportList = response.data['data'];
-      print("----------------------------");
-      print(exportList);
-      // return exportList;
       return exportList;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> getAllQuotes() async {
+    late List<dynamic> results;
+    try {
+      final response = await dio.get('quotes');
+      results = response.data;
+      return results;
       // return response.data;
     } catch (e) {
       print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");

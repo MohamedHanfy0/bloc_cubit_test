@@ -18,3 +18,13 @@ class Character {
     about = json['about'];
   }
 }
+
+class Quote {
+  late String name;
+  late String quote;
+
+  Quote.fromJson(Map<String, dynamic> json) {
+    name = json['a'];
+    quote = json['q'];
+  }
+}

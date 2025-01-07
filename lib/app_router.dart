@@ -11,10 +11,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AppRouter {
   late CharactersRepository charactersRepository;
   late CharactersCubit charactersCubit;
+  late QuoteCubit quoteCubit;
 
   AppRouter() {
     charactersRepository = CharactersRepository(CharactersWebServices());
     charactersCubit = CharactersCubit(charactersRepository);
+    quoteCubit = QuoteCubit(charactersRepository);
   }
 
   Route? generaterouter(RouteSettings settings) {
@@ -29,7 +31,12 @@ class AppRouter {
       case charactersDetailsScreen:
         final character = settings.arguments as Character;
         return MaterialPageRoute(
-            builder: (context) => CharactersDetailsScreen(character: character,));
+            builder: (context) => BlocProvider(
+                  create: (context) => QuoteCubit(charactersRepository),
+                  child: CharactersDetailsScreen(
+                    character: character,
+                  ),
+                ));
     }
     return null;
   }
